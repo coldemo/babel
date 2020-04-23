@@ -1,4 +1,5 @@
 [
   "syntax-jsx",
-  "transform-react-jsx"
+  "transform-react-jsx",
+  "transform-typescript"
 ]
