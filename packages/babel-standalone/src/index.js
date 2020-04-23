@@ -16,17 +16,19 @@ import {
   buildExternalHelpers as babelBuildExternalHelpers,
 } from "@babel/core";
 import { all } from "./generated/plugins";
-import preset2015 from "./preset-es2015";
-import presetStage0 from "./preset-stage-0";
-import presetStage1 from "./preset-stage-1";
-import presetStage2 from "./preset-stage-2";
-import presetStage3 from "./preset-stage-3";
-import presetEnv from "@babel/preset-env";
-import presetFlow from "@babel/preset-flow";
-import presetReact from "@babel/preset-react";
-import presetTypescript from "@babel/preset-typescript";
+// import preset2015 from "./preset-es2015";
+// import presetStage0 from "./preset-stage-0";
+// import presetStage1 from "./preset-stage-1";
+// import presetStage2 from "./preset-stage-2";
+// import presetStage3 from "./preset-stage-3";
+// import presetEnv from "@babel/preset-env";
+// import presetFlow from "@babel/preset-flow";
+// import presetReact from "@babel/preset-react";
+// import presetTypescript from "@babel/preset-typescript";
 
-import { runScripts } from "./transformScriptTags";
+// import { runScripts } from "./transformScriptTags";
+
+import transformVueJsx from "babel-plugin-transform-vue-jsx";
 
 const isArray =
   Array.isArray ||
@@ -165,63 +167,66 @@ export function registerPresets(newPresets: {
 // Want to get rid of this long whitelist of plugins?
 // Wait! Please read https://github.com/babel/babel/pull/6177 first.
 registerPlugins(all);
+registerPlugins({
+  "transform-vue-jsx": transformVueJsx,
+});
 
 // All the presets we should bundle
 // Want to get rid of this whitelist of presets?
 // Wait! Please read https://github.com/babel/babel/pull/6177 first.
-registerPresets({
-  env: presetEnv,
-  es2015: preset2015,
-  es2016: () => {
-    return {
-      plugins: [availablePlugins["transform-exponentiation-operator"]],
-    };
-  },
-  es2017: () => {
-    return {
-      plugins: [availablePlugins["transform-async-to-generator"]],
-    };
-  },
-  react: presetReact,
-  "stage-0": presetStage0,
-  "stage-1": presetStage1,
-  "stage-2": presetStage2,
-  "stage-3": presetStage3,
-  "es2015-loose": {
-    presets: [[preset2015, { loose: true }]],
-  },
-  // ES2015 preset with es2015-modules-commonjs removed
-  "es2015-no-commonjs": {
-    presets: [[preset2015, { modules: false }]],
-  },
-  typescript: presetTypescript,
-  flow: presetFlow,
-});
+// registerPresets({
+//   env: presetEnv,
+//   es2015: preset2015,
+//   es2016: () => {
+//     return {
+//       plugins: [availablePlugins["transform-exponentiation-operator"]],
+//     };
+//   },
+//   es2017: () => {
+//     return {
+//       plugins: [availablePlugins["transform-async-to-generator"]],
+//     };
+//   },
+//   react: presetReact,
+//   "stage-0": presetStage0,
+//   "stage-1": presetStage1,
+//   "stage-2": presetStage2,
+//   "stage-3": presetStage3,
+//   "es2015-loose": {
+//     presets: [[preset2015, { loose: true }]],
+//   },
+//   // ES2015 preset with es2015-modules-commonjs removed
+//   "es2015-no-commonjs": {
+//     presets: [[preset2015, { modules: false }]],
+//   },
+//   typescript: presetTypescript,
+//   flow: presetFlow,
+// });
 
 // $FlowIgnore
 export const version = VERSION;
 
-function onDOMContentLoaded() {
-  transformScriptTags();
-}
+// function onDOMContentLoaded() {
+//   transformScriptTags();
+// }
 
 // Listen for load event if we're in a browser and then kick off finding and
 // running of scripts with "text/babel" type.
-if (typeof window !== "undefined" && window && window.addEventListener) {
-  window.addEventListener("DOMContentLoaded", onDOMContentLoaded, false);
-}
+// if (typeof window !== "undefined" && window && window.addEventListener) {
+//   window.addEventListener("DOMContentLoaded", onDOMContentLoaded, false);
+// }
 
 /**
  * Transform <script> tags with "text/babel" type.
  * @param {Array} scriptTags specify script tags to transform, transform all in the <head> if not given
  */
-export function transformScriptTags(scriptTags?: Array<any>) {
-  runScripts(transform, scriptTags);
-}
+// export function transformScriptTags(scriptTags?: Array<any>) {
+//   runScripts(transform, scriptTags);
+// }
 
 /**
  * Disables automatic transformation of <script> tags with "text/babel" type.
  */
-export function disableScriptTags() {
-  window.removeEventListener("DOMContentLoaded", onDOMContentLoaded);
-}
+// export function disableScriptTags() {
+//   window.removeEventListener("DOMContentLoaded", onDOMContentLoaded);
+// }
